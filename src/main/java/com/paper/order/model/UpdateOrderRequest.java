@@ -1,5 +1,7 @@
 package com.paper.order.model;
 
+import java.util.Date;
+
 public class UpdateOrderRequest {
 	private String orderId;
 	private String customerName;
@@ -7,6 +9,7 @@ public class UpdateOrderRequest {
 	private String rollSize;
 	private String cupSize;
 	private String paperSupplier;
+	private Date orderDate;
 
 	public String getOrderId() {
 		return orderId;
@@ -54,5 +57,13 @@ public class UpdateOrderRequest {
 
 	public void setPaperSupplier(String paperSupplier) {
 		this.paperSupplier = paperSupplier;
+	}
+
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
 	}
 }

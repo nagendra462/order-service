@@ -1,5 +1,6 @@
 package com.paper.order.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -29,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 		BeanUtils.copyProperties(request, order);
 		Query query = new Query();
 		long count = this.mongoTemplate.count(query, Order.class);
-		order.setOrderId(request.getPaperSupplier() + "-" + (count + 1));
+		order.setOrderId(request.getCustomerName() + "-" + (count + 1));
 		return new ResponseEntity<>(
 				"Order successfully created with orderId- " + this.mongoTemplate.save(order).getOrderId(),
 				HttpStatus.OK);
@@ -42,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
 		if (!CollectionUtils.isEmpty(orders)) {
 			return new ResponseEntity<>(orders, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("No orders found", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -66,6 +67,9 @@ public class OrderServiceImpl implements OrderService {
 			}
 			if (request.getRollWeight() != null) {
 				order.setRollWeight(request.getRollWeight());
+			}
+			if (request.getOrderDate() != null) {
+				order.setOrderDate(request.getOrderDate());
 			}
 
 			this.mongoTemplate.save(order);

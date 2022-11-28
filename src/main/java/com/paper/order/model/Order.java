@@ -2,7 +2,6 @@ package com.paper.order.model;
 
 import java.util.Date;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Order {
 	@Id
 	private String id;
-	@CreatedDate
 	private Date orderDate;
 	private String customerName;
 	private String rollWeight;
