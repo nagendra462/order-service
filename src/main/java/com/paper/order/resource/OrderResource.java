@@ -28,10 +28,17 @@ public class OrderResource {
 	public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
 		return this.orderService.createOrder(request);
 	}
+	
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getorders")
-	public ResponseEntity<?> getOrders(){
-		return this.orderService.getOrders();
+	public ResponseEntity<?> getOrders(@RequestParam String searchInput){
+		return this.orderService.getOrders(searchInput);
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getorder")
+	public ResponseEntity<?> getOrder(@RequestParam String orderId){
+		return this.orderService.getOrder(orderId);
 	}
 	
 	@CrossOrigin(value = "http://localhost:3000")

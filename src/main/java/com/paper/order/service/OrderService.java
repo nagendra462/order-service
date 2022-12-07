@@ -9,9 +9,12 @@ public interface OrderService {
 
 	ResponseEntity<?> createOrder(CreateOrderRequest request);
 
-	ResponseEntity<?> getOrders();
+	ResponseEntity<?> getOrders(String searchInput);
 
 	ResponseEntity<?> updateOrder(UpdateOrderRequest request);
 
 	ResponseEntity<?> deleteOrder(String orderId);
+
+	ResponseEntity<?> getOrder(String orderId);
+
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class UpdateOrderRequest {
 	private String orderId;
-	private String customerName;
+	private String customerId;
 	private String rollWeight;
 	private String rollSize;
 	private String cupSize;
@@ -19,12 +19,12 @@ public class UpdateOrderRequest {
 		this.orderId = orderId;
 	}
 
-	public String getCustomerName() {
-		return customerName;
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
 	public String getRollWeight() {

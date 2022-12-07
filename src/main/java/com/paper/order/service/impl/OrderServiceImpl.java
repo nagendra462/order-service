@@ -1,8 +1,11 @@
 package com.paper.order.service.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.paper.order.model.CreateOrderRequest;
+import com.paper.order.model.Customer;
 import com.paper.order.model.Order;
 import com.paper.order.model.UpdateOrderRequest;
 import com.paper.order.service.OrderService;
@@ -29,21 +33,29 @@ public class OrderServiceImpl implements OrderService {
 		Order order = new Order();
 		BeanUtils.copyProperties(request, order);
 		Query query = new Query();
-		long count = this.mongoTemplate.count(query, Order.class);
-		order.setOrderId(request.getCustomerName() + "-" + (count + 1));
+		query.addCriteria(Criteria.where("customerId").is(request.getCustomerId()));
+		Customer customer = this.mongoTemplate.findOne(query, Customer.class);
+		int count = customer.getCounter();
+		order.setOrderId("WO-" + request.getCustomerId() + "-" + (count + 1));
+		order.setRollId("R-" + (count + 1));
+		customer.setCounter(count + 1);
+		this.mongoTemplate.save(customer);
 		return new ResponseEntity<>(
 				"Order successfully created with orderId- " + this.mongoTemplate.save(order).getOrderId(),
 				HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<?> getOrders() {
+	public ResponseEntity<?> getOrders(String searchInput) {
 		Query query = new Query();
+		if (StringUtils.isNotEmpty(searchInput)) {
+			query = this.getSearchQuery(searchInput);
+		}
 		List<Order> orders = this.mongoTemplate.find(query, Order.class);
 		if (!CollectionUtils.isEmpty(orders)) {
 			return new ResponseEntity<>(orders, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 		}
 	}
 
@@ -53,8 +65,8 @@ public class OrderServiceImpl implements OrderService {
 		query.addCriteria(Criteria.where("orderId").is(request.getOrderId()));
 		Order order = this.mongoTemplate.findOne(query, Order.class);
 		if (order != null) {
-			if (!request.getCustomerName().isEmpty()) {
-				order.setCustomerName(request.getCustomerName());
+			if (!request.getCustomerId().isEmpty()) {
+				order.setCustomerId(request.getCustomerId());
 			}
 			if (request.getCupSize() != null) {
 				order.setCupSize(request.getCupSize());
@@ -91,4 +103,37 @@ public class OrderServiceImpl implements OrderService {
 			return new ResponseEntity<>("No order found with Id-" + orderId, HttpStatus.NOT_FOUND);
 		}
 	}
+
+	private Query getSearchQuery(String searchInput) {
+		Query query = new Query();
+		List<Criteria> criterias = new LinkedList<>();
+		Criteria searchCriteria = new Criteria();
+		searchCriteria.orOperator(
+				Criteria.where("orderId")
+						.regex(Pattern.compile(searchInput, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)),
+				Criteria.where("paperSupplier")
+						.regex(Pattern.compile(searchInput, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)),
+				Criteria.where("customerId")
+						.regex(Pattern.compile(searchInput, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)));
+		criterias.add(searchCriteria);
+		if (!CollectionUtils.isEmpty(criterias)) {
+			Criteria criteria = new Criteria();
+			criteria.andOperator(criterias.stream().toArray(Criteria[]::new));
+			query.addCriteria(criteria);
+		}
+		return query;
+	}
+
+	@Override
+	public ResponseEntity<?> getOrder(String orderId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("orderId").is(orderId));
+		Order order = this.mongoTemplate.findOne(query, Order.class);
+		if (order != null) {
+			return new ResponseEntity<>(order, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new Customer(), HttpStatus.OK);
+		}
+	}
+
 }

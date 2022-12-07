@@ -5,17 +5,20 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+import com.paper.order.constants.CollectionConstants;
+
+@Document(collection = CollectionConstants.ORDERS)
 public class Order {
 	@Id
 	private String id;
 	private Date orderDate;
-	private String customerName;
+	private String customerId;
 	private String rollWeight;
 	private String rollSize;
 	private String cupSize;
 	private String paperSupplier;
 	private String orderId;
+	private String rollId;
 
 	public String getId() {
 		return this.id;
@@ -33,12 +36,12 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
-	public String getCustomerName() {
-		return customerName;
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
 	public String getRollWeight() {
@@ -80,4 +83,13 @@ public class Order {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
+
+	public String getRollId() {
+		return rollId;
+	}
+
+	public void setRollId(String rollId) {
+		this.rollId = rollId;
+	}
+
 }
