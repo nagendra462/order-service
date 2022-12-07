@@ -19,7 +19,7 @@ import com.paper.order.service.OrderService;
 @RestController
 @RequestMapping("/api/v1/orders")
 public class OrderResource {
-	
+
 	@Autowired
 	private OrderService orderService;
 
@@ -28,29 +28,29 @@ public class OrderResource {
 	public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
 		return this.orderService.createOrder(request);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getorders")
-	public ResponseEntity<?> getOrders(@RequestParam String searchInput){
+	public ResponseEntity<?> getOrders(@RequestParam(required = false) String searchInput) {
 		return this.orderService.getOrders(searchInput);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getorder")
-	public ResponseEntity<?> getOrder(@RequestParam String orderId){
+	public ResponseEntity<?> getOrder(@RequestParam String orderId) {
 		return this.orderService.getOrder(orderId);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@PutMapping("/updateorder")
-	public ResponseEntity<?> updateOrder(@RequestBody UpdateOrderRequest request){
+	public ResponseEntity<?> updateOrder(@RequestBody UpdateOrderRequest request) {
 		return this.orderService.updateOrder(request);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@DeleteMapping("/deleteorder")
-	public ResponseEntity<?> deleteOrder(@RequestParam String orderId){
+	public ResponseEntity<?> deleteOrder(@RequestParam String orderId) {
 		return this.orderService.deleteOrder(orderId);
 	}
-	
+
 }

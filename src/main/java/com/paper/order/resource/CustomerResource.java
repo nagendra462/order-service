@@ -31,7 +31,7 @@ public class CustomerResource {
 
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getcustomers")
-	public ResponseEntity<?> getCustomers(@RequestParam String searchInput) {
+	public ResponseEntity<?> getCustomers(@RequestParam(required = false) String searchInput) {
 		return this.customerService.getCustomers(searchInput);
 	}
 
@@ -52,5 +52,4 @@ public class CustomerResource {
 	public ResponseEntity<?> deleteOrder(@RequestParam String customerId) {
 		return this.customerService.deleteCustomer(customerId);
 	}
-
 }
