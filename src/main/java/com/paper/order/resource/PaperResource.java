@@ -21,5 +21,11 @@ public class PaperResource {
 	public ResponseEntity<?> getUniqueValues() {
 		return this.paperService.getUniqueValues();
 	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/counts")
+	public ResponseEntity<?> getCounts() {
+		return this.paperService.getCounts();
+	}
 
 }
