@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -19,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import com.paper.order.model.CreateOrderRequest;
 import com.paper.order.model.Customer;
 import com.paper.order.model.Order;
+import com.paper.order.model.Status;
 import com.paper.order.model.UpdateOrderRequest;
 import com.paper.order.service.OrderService;
 
@@ -40,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setRollId("R-" + (count + 1));
 		customer.setCounter(count + 1);
 		this.mongoTemplate.save(customer);
+		order.setStatus(Status.PENDING.getStatus());
 		return new ResponseEntity<>(
 				"Order successfully created with orderId- " + this.mongoTemplate.save(order).getOrderId(),
 				HttpStatus.OK);
@@ -51,6 +54,8 @@ public class OrderServiceImpl implements OrderService {
 		if (StringUtils.isNotEmpty(searchInput)) {
 			query = this.getSearchQuery(searchInput);
 		}
+		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+
 		List<Order> orders = this.mongoTemplate.find(query, Order.class);
 		if (!CollectionUtils.isEmpty(orders)) {
 			return new ResponseEntity<>(orders, HttpStatus.OK);
@@ -132,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
 		if (order != null) {
 			return new ResponseEntity<>(order, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(new Customer(), HttpStatus.OK);
+			return new ResponseEntity<>(new Order(), HttpStatus.OK);
 		}
 	}
 

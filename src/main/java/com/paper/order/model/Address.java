@@ -1,18 +1,27 @@
 package com.paper.order.model;
 
 public class Address {
-	private String line;
+	private String lane;
+	private String street;
 	private String city;
 	private String state;
 	private String country;
 	private String zipCode;
 
-	public String getLine() {
-		return line;
+	public String getLane() {
+		return lane;
 	}
 
-	public void setLine(String line) {
-		this.line = line;
+	public void setLane(String lane) {
+		this.lane = lane;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
 	}
 
 	public String getCity() {
