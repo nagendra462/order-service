@@ -5,4 +5,5 @@ public class CollectionConstants {
 	public static final String CUSTOMERS= "customers";
 	public static final String DELIVERIES= "deliveries";
 	public static final String UNIQUE_VALUES= "unique_values";
+	public static final String COUNTER= "counter";
 }

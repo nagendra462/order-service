@@ -12,11 +12,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.paper.order.model.Counter;
 import com.paper.order.model.CreateOrderRequest;
 import com.paper.order.model.Customer;
 import com.paper.order.model.Order;
@@ -26,7 +28,6 @@ import com.paper.order.service.OrderService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
@@ -35,17 +36,21 @@ public class OrderServiceImpl implements OrderService {
 		Order order = new Order();
 		BeanUtils.copyProperties(request, order);
 		Query query = new Query();
-		query.addCriteria(Criteria.where("customerId").is(request.getCustomerId()));
-		Customer customer = this.mongoTemplate.findOne(query, Customer.class);
-		int count = customer.getCounter();
-		order.setOrderId("WO-" + request.getCustomerId() + "-" + (count + 1));
-		order.setRollId("R-" + (count + 1));
-		customer.setCounter(count + 1);
-		this.mongoTemplate.save(customer);
+		Counter counter = this.mongoTemplate.findOne(query, Counter.class);
+		if (counter == null) {
+			counter = new Counter();
+		}
+		int orderCount = counter.getOrderCount() + 1;
+		int rollCount = counter.getRollCount() + 1;
+		order.setOrderId("WO-" + orderCount);
+		order.setRollId("R-" + rollCount);
 		order.setStatus(Status.PENDING.getStatus());
-		return new ResponseEntity<>(
-				"Order successfully created with orderId- " + this.mongoTemplate.save(order).getOrderId(),
-				HttpStatus.OK);
+		this.mongoTemplate.save(order);
+		Update update = new Update();
+		update.set("orderCount", orderCount);
+		update.set("rollCount", rollCount);
+		this.mongoTemplate.updateFirst(query, update, Counter.class);
+		return new ResponseEntity<>("Order successfully created with orderId- " + order.getOrderId(), HttpStatus.OK);
 	}
 
 	@Override

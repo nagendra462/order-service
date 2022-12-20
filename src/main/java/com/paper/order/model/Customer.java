@@ -2,13 +2,14 @@ package com.paper.order.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.mongodb.lang.NonNull;
 import com.paper.order.constants.CollectionConstants;
 
 @Document(collection = CollectionConstants.CUSTOMERS)
@@ -18,12 +19,11 @@ public class Customer {
 	private String firstName;
 	private String lastName;
 	@Indexed(unique = true)
-	@NonNull
+	@NotNull
 	private String email;
 	private String phone;
 	private Address address;
 	private String customerId;
-	private Integer counter;
 	@CreatedDate
 	private Date createdAt;
 	@LastModifiedDate
@@ -99,14 +99,6 @@ public class Customer {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
-	}
-
-	public Integer getCounter() {
-		return counter;
-	}
-
-	public void setCounter(Integer counter) {
-		this.counter = counter;
 	}
 
 }

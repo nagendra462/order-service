@@ -9,11 +9,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.paper.order.model.Counter;
 import com.paper.order.model.CreateDeliveryRequest;
 import com.paper.order.model.Delivery;
 import com.paper.order.model.Status;
@@ -22,18 +24,27 @@ import com.paper.order.service.DeliveryService;
 
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
-
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
 	@Override
 	public ResponseEntity<?> createDelivery(CreateDeliveryRequest request) {
+
+		Query query = new Query();
+		Counter counter = this.mongoTemplate.findOne(query, Counter.class);
+		if (counter == null) {
+			counter = new Counter();
+		}
+		int deliveryCount = counter.getDeliveryCount() + 1;
 		Delivery delivery = new Delivery();
 		BeanUtils.copyProperties(request, delivery);
-		delivery.setDeliveryId("D-" + request.getOrderId());
+		delivery.setDeliveryId("D-" + deliveryCount);
 		delivery.setStatus(Status.PENDING.getStatus());
-		return new ResponseEntity<>(
-				"Delivery successfully created with deliveryId- " + this.mongoTemplate.save(delivery).getDeliveryId(),
+		this.mongoTemplate.save(delivery);
+		Update update = new Update();
+		update.set("deliveryCount", deliveryCount);
+		this.mongoTemplate.updateFirst(query, update, Counter.class);
+		return new ResponseEntity<>("Delivery successfully created with deliveryId- " + delivery.getDeliveryId(),
 				HttpStatus.OK);
 	}
 

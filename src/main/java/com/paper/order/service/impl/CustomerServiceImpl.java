@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.paper.order.model.Counter;
 import com.paper.order.model.CreateCustomerRequest;
 import com.paper.order.model.Customer;
 import com.paper.order.model.UpdateCustomerRequest;
@@ -29,13 +31,20 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public ResponseEntity<?> createCustomer(CreateCustomerRequest request) {
-
+		Query query = new Query();
+		Counter counter = this.mongoTemplate.findOne(query, Counter.class);
+		if (counter == null) {
+			counter = new Counter();
+		}
+		int custCount = counter.getCustomerCount() + 1;
 		Customer customer = new Customer();
 		BeanUtils.copyProperties(request, customer);
-		customer.setCustomerId("C-" + request.getFirstName());
-		customer.setCounter(0);
-		return new ResponseEntity<>(
-				"Customer successfully created with customerId- " + this.mongoTemplate.save(customer).getCustomerId(),
+		customer.setCustomerId("C-" + custCount);
+		this.mongoTemplate.save(customer);
+		Update update= new Update();
+		update.set("customerCount", custCount);
+		this.mongoTemplate.updateFirst(query, update, Counter.class);
+		return new ResponseEntity<>("Customer successfully created with customerId- " + customer.getCustomerId(),
 				HttpStatus.OK);
 	}
 
