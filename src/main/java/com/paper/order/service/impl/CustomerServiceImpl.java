@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		Customer customer = new Customer();
 		BeanUtils.copyProperties(request, customer);
-		customer.setCustomerId("C" + request.getName());
+		customer.setCustomerId("C-" + request.getFirstName());
 		customer.setCounter(0);
 		return new ResponseEntity<>(
 				"Customer successfully created with customerId- " + this.mongoTemplate.save(customer).getCustomerId(),
@@ -71,8 +71,11 @@ public class CustomerServiceImpl implements CustomerService {
 		query.addCriteria(Criteria.where("customerId").is(request.getCustomerId()));
 		Customer customer = this.mongoTemplate.findOne(query, Customer.class);
 		if (customer != null) {
-			if (request.getName() != null) {
-				customer.setName(request.getName());
+			if (request.getFirstName() != null) {
+				customer.setFirstName(request.getFirstName());
+			}
+			if (request.getLastName() != null) {
+				customer.setLastName(request.getLastName());
 			}
 			if (request.getEmail() != null) {
 				customer.setEmail(request.getEmail());
