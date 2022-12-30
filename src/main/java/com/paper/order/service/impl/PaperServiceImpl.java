@@ -17,6 +17,8 @@ import com.paper.order.model.Order;
 import com.paper.order.model.UniqueValues;
 import com.paper.order.service.PaperService;
 
+import io.micrometer.core.instrument.util.StringUtils;
+
 @Service
 public class PaperServiceImpl implements PaperService {
 
@@ -48,11 +50,14 @@ public class PaperServiceImpl implements PaperService {
 	}
 
 	@Override
-	public ResponseEntity<?> loginAuthentication(String userName, String password) {
+	public ResponseEntity<?> loginAuthentication(String username, String password) {
+		if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+			return new ResponseEntity<>("Username or Password should not be blank", HttpStatus.BAD_REQUEST);
+		}
 		Query query = new Query();
-		query.addCriteria(Criteria.where("email").is(userName));
+		query.addCriteria(Criteria.where("email").is(username));
 		if (this.mongoTemplate.count(query, Customer.class) == 0) {
-			return new ResponseEntity<>("Email Id doesn't exist", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Email doesn't exist", HttpStatus.BAD_REQUEST);
 		}
 		query.addCriteria(Criteria.where("password").is(password));
 		Customer customer = this.mongoTemplate.findOne(query, Customer.class);

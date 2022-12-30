@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paper.order.model.LoginRequest;
 import com.paper.order.service.PaperService;
 
 @RestController
@@ -30,8 +33,8 @@ public class PaperResource {
 	}
 
 	@CrossOrigin(value = "http://localhost:3000")
-	@GetMapping("/login")
-	public ResponseEntity<?> login(@RequestParam String userName, @RequestParam String password) {
-		return this.paperService.loginAuthentication(userName, password);
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+		return this.paperService.loginAuthentication(request.getUsername(), request.getPassword());
 	}
 }
