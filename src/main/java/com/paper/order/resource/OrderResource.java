@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paper.order.model.ApproveOrderRequest;
 import com.paper.order.model.CreateOrderRequest;
 import com.paper.order.model.UpdateOrderRequest;
 import com.paper.order.service.OrderService;
@@ -24,9 +25,15 @@ public class OrderResource {
 	private OrderService orderService;
 
 	@CrossOrigin(value = "http://localhost:3000")
-	@PostMapping("/createorder")
+	@PostMapping("/createorderrequest")
 	public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
-		return this.orderService.createOrder(request);
+		return this.orderService.createOrderRequest(request);
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@PostMapping("/orderapproval")
+	public ResponseEntity<?> approveOrder(@RequestBody ApproveOrderRequest request) {
+		return this.orderService.approveOrder(request);
 	}
 
 	@CrossOrigin(value = "http://localhost:3000")

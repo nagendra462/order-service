@@ -10,6 +10,7 @@ public class Counter {
 	private int customerCount;
 	private int deliveryCount;
 	private int rollCount;
+	private int orderRequestCount;
 
 	public int getOrderCount() {
 		return orderCount;
@@ -41,6 +42,14 @@ public class Counter {
 
 	public void setRollCount(int rollCount) {
 		this.rollCount = rollCount;
+	}
+
+	public int getOrderRequestCount() {
+		return orderRequestCount;
+	}
+
+	public void setOrderRequestCount(int orderRequestCount) {
+		this.orderRequestCount = orderRequestCount;
 	}
 
 }

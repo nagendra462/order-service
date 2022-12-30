@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.paper.order.constants.CollectionConstants;
 
-@Document(collection = CollectionConstants.ORDERS)
-public class Order {
+@Document(collection = CollectionConstants.ORDER_REQUESTS)
+public class OrderRequest {
 	@Id
 	private String id;
 	private Date orderDate;
@@ -19,15 +19,13 @@ public class Order {
 	private String rollSize;
 	private String cupSize;
 	private String paperSupplier;
-	private String orderId;
-	private String rollId;
+	private String orderRequestId;
 	@CreatedDate
 	private Date createdAt;
 	@LastModifiedDate
 	private String lastModifiedDate;
 	private String createdBy;
 	private String status;
-	private String acceptedBy;
 
 	public String getId() {
 		return this.id;
@@ -85,20 +83,12 @@ public class Order {
 		this.paperSupplier = paperSupplier;
 	}
 
-	public String getOrderId() {
-		return orderId;
+	public String getOrderRequestId() {
+		return orderRequestId;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	public String getRollId() {
-		return rollId;
-	}
-
-	public void setRollId(String rollId) {
-		this.rollId = rollId;
+	public void setOrderRequestId(String orderRequestId) {
+		this.orderRequestId = orderRequestId;
 	}
 
 	public Date getCreatedAt() {
@@ -131,14 +121,6 @@ public class Order {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getAcceptedBy() {
-		return acceptedBy;
-	}
-
-	public void setAcceptedBy(String acceptedBy) {
-		this.acceptedBy = acceptedBy;
 	}
 
 }
