@@ -7,4 +7,6 @@ public interface PaperService {
 	ResponseEntity<?> getUniqueValues();
 
 	ResponseEntity<?> getCounts();
+
+	ResponseEntity<?> loginAuthentication(String userName, String password);
 }

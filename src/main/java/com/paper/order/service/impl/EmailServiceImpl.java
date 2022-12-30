@@ -11,8 +11,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import com.paper.order.service.EmailService;
+
 @Service
-public class EmailServiceImpl {
+public class EmailServiceImpl implements EmailService {
 
 	@Value("${smtp.port}")
 	private String port;
@@ -22,13 +24,14 @@ public class EmailServiceImpl {
 
 	private JavaMailSender javaMailSender;
 
+	@Override
 	public void triggerEmail() {
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-				helper.setFrom("papertec.reports@suchiit.com");
+				helper.setFrom("nagendra_nallamilli@suchiit.com");
 				helper.setTo("nagendra_nallamilli@suchiit.com");
 				helper.setSubject("Test Email");
 				helper.setText("Testing content inside email");
@@ -41,6 +44,8 @@ public class EmailServiceImpl {
 		if (this.javaMailSender == null) {
 			JavaMailSenderImpl javaMailSenderImpl = new JavaMailSenderImpl();
 			javaMailSenderImpl.setHost(this.host);
+			javaMailSenderImpl.setUsername("nagendra_nallamilli@suchiit.com");
+			javaMailSenderImpl.setPassword("");
 			javaMailSenderImpl.setPort(Integer.parseInt(this.port));
 			javaMailSenderImpl.setJavaMailProperties(this.getMailProperties());
 			this.javaMailSender = javaMailSenderImpl;
@@ -54,6 +59,8 @@ public class EmailServiceImpl {
 		properties.put("mail.transport.protocol", "smtp");
 		properties.put("mail.smtp.connectiontimeout", "21600000");
 		properties.put("mail.smtp.timeout", "21600000");
+		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.auth", "true");
 		return properties;
 	}
 }

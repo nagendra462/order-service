@@ -22,12 +22,16 @@ import com.paper.order.model.CreateCustomerRequest;
 import com.paper.order.model.Customer;
 import com.paper.order.model.UpdateCustomerRequest;
 import com.paper.order.service.CustomerService;
+import com.paper.order.service.EmailService;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Override
 	public ResponseEntity<?> createCustomer(CreateCustomerRequest request) {
@@ -41,9 +45,10 @@ public class CustomerServiceImpl implements CustomerService {
 		BeanUtils.copyProperties(request, customer);
 		customer.setCustomerId("C-" + custCount);
 		this.mongoTemplate.save(customer);
-		Update update= new Update();
+		Update update = new Update();
 		update.set("customerCount", custCount);
 		this.mongoTemplate.updateFirst(query, update, Counter.class);
+		this.emailService.triggerEmail();
 		return new ResponseEntity<>("Customer successfully created with customerId- " + customer.getCustomerId(),
 				HttpStatus.OK);
 	}

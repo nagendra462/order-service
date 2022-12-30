@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paper.order.constants.CollectionConstants;
 
 @Document(collection = CollectionConstants.CUSTOMERS)
@@ -28,6 +29,8 @@ public class Customer {
 	private Date createdAt;
 	@LastModifiedDate
 	private String lastModifiedDate;
+	@JsonIgnore
+	private String password;
 
 	public String getId() {
 		return this.id;
@@ -99,6 +102,14 @@ public class Customer {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

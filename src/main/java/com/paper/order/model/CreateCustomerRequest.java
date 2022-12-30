@@ -6,6 +6,7 @@ public class CreateCustomerRequest {
 	private String email;
 	private String phone;
 	private Address address;
+	private String password;
 
 	public String getFirstName() {
 		return firstName;
@@ -45,6 +46,14 @@ public class CreateCustomerRequest {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

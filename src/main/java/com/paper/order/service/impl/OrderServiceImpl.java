@@ -20,7 +20,6 @@ import org.springframework.util.CollectionUtils;
 
 import com.paper.order.model.Counter;
 import com.paper.order.model.CreateOrderRequest;
-import com.paper.order.model.Customer;
 import com.paper.order.model.Order;
 import com.paper.order.model.Status;
 import com.paper.order.model.UpdateOrderRequest;
