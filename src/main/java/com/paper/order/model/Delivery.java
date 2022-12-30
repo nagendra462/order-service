@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.paper.order.constants.CollectionConstants;
 
-@Document(collection = CollectionConstants.CUSTOMERS)
+@Document(collection = CollectionConstants.DELIVERIES)
 public class Delivery {
 	@Id
 	private String id;

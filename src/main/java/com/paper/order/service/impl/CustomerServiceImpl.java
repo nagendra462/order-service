@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Update update = new Update();
 		update.set("customerCount", custCount);
 		this.mongoTemplate.updateFirst(query, update, Counter.class);
-		this.emailService.triggerEmail();
+//		this.emailService.triggerEmail();
 		return new ResponseEntity<>("Customer successfully created with customerId- " + customer.getCustomerId(),
 				HttpStatus.OK);
 	}
