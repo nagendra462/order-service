@@ -1,8 +1,10 @@
 package com.paper.order.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,9 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.paper.order.model.ApproveOrderRequest;
 import com.paper.order.model.Counter;
 import com.paper.order.model.CreateOrderRequest;
 import com.paper.order.model.Order;
+import com.paper.order.model.OrderRequest;
 import com.paper.order.model.Status;
 import com.paper.order.model.UpdateOrderRequest;
 import com.paper.order.service.OrderService;
@@ -31,25 +35,23 @@ public class OrderServiceImpl implements OrderService {
 	private MongoTemplate mongoTemplate;
 
 	@Override
-	public ResponseEntity<?> createOrder(CreateOrderRequest request) {
-		Order order = new Order();
+	public ResponseEntity<?> createOrderRequest(CreateOrderRequest request) {
+		OrderRequest order = new OrderRequest();
 		BeanUtils.copyProperties(request, order);
 		Query query = new Query();
 		Counter counter = this.mongoTemplate.findOne(query, Counter.class);
 		if (counter == null) {
 			counter = new Counter();
 		}
-		int orderCount = counter.getOrderCount() + 1;
-		int rollCount = counter.getRollCount() + 1;
-		order.setOrderId("WO-" + orderCount);
-		order.setRollId("R-" + rollCount);
+		int orderRequestCount = counter.getOrderRequestCount() + 1;
+		order.setOrderRequestId("WOR-" + orderRequestCount);
 		order.setStatus(Status.PENDING.getStatus());
 		this.mongoTemplate.save(order);
 		Update update = new Update();
-		update.set("orderCount", orderCount);
-		update.set("rollCount", rollCount);
+		update.set("orderRequestCount", orderRequestCount);
 		this.mongoTemplate.updateFirst(query, update, Counter.class);
-		return new ResponseEntity<>("Order successfully created with orderId- " + order.getOrderId(), HttpStatus.OK);
+		return new ResponseEntity<>("Order Request successfully created with Id- " + order.getOrderRequestId(),
+				HttpStatus.OK);
 	}
 
 	@Override
@@ -60,6 +62,22 @@ public class OrderServiceImpl implements OrderService {
 		}
 		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 
+		List<Order> orders = this.mongoTemplate.find(query, Order.class);
+		if (!CollectionUtils.isEmpty(orders)) {
+			return new ResponseEntity<>(orders, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> getOrderByCustomerId(String customerId, String searchInput) {
+		Query query = new Query();
+		if (StringUtils.isNotEmpty(searchInput)) {
+			query = this.getSearchQuery(searchInput);
+		}
+		query.addCriteria(Criteria.where("customerId").is(customerId));
+		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 		List<Order> orders = this.mongoTemplate.find(query, Order.class);
 		if (!CollectionUtils.isEmpty(orders)) {
 			return new ResponseEntity<>(orders, HttpStatus.OK);
@@ -143,6 +161,38 @@ public class OrderServiceImpl implements OrderService {
 		} else {
 			return new ResponseEntity<>(new Order(), HttpStatus.OK);
 		}
+	}
+
+	@Override
+	public ResponseEntity<?> approveOrder(ApproveOrderRequest request) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("orderRequestId").is(request.getOrderRequestId()));
+		Update update = new Update();
+		update.set("status", request.getStatus());
+		this.mongoTemplate.updateFirst(query, update, OrderRequest.class);
+		if (request.getStatus().equals(Status.ACCEPTED.getStatus())) {
+			OrderRequest orderRequest = this.mongoTemplate.findOne(query, OrderRequest.class);
+			Order order = new Order();
+			BeanUtils.copyProperties(orderRequest, order, "orderRequestId");
+			Query orderQuery = new Query();
+			Counter counter = this.mongoTemplate.findOne(orderQuery, Counter.class);
+			if (counter == null) {
+				counter = new Counter();
+			}
+			int orderCount = counter.getOrderCount() + 1;
+			int rollCount = counter.getRollCount() + 1;
+			order.setOrderId("WO-" + orderCount);
+			order.setRollId("R-" + rollCount);
+			order.setStatus(Status.PENDING.getStatus());
+			order.setAcceptedBy(request.getUserId());
+			this.mongoTemplate.save(order);
+			Update counterUpdate = new Update();
+			update.set("orderCount", orderCount);
+			update.set("rollCount", rollCount);
+			this.mongoTemplate.updateFirst(query, counterUpdate, Counter.class);
+			return new ResponseEntity<>("Order successfully created with Id- " + order.getOrderId(), HttpStatus.OK);
+		}
+		return new ResponseEntity<>("Unable to create order as order request is not accepted", HttpStatus.OK);
 	}
 
 }

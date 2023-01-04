@@ -34,6 +34,12 @@ public class DeliveryResource {
 	public ResponseEntity<?> getDeliveries() {
 		return this.deliveryService.getDeliveries();
 	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getdeliveriesbycustomer")
+	public ResponseEntity<?> getDeliveriesByCustomerId(@RequestParam String customerId) {
+		return this.deliveryService.getDeliveriesByCustomerId(customerId);
+	}
 
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getdelivery")

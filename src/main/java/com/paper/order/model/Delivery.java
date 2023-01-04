@@ -21,6 +21,7 @@ public class Delivery {
 	private Date createdAt;
 	@LastModifiedDate
 	private String lastModifiedDate;
+	private String customerId;
 
 	public String getId() {
 		return this.id;
@@ -76,6 +77,14 @@ public class Delivery {
 
 	public void setLastModifiedDate(String lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
 }

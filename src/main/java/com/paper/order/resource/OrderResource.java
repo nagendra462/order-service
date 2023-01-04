@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paper.order.model.ApproveOrderRequest;
 import com.paper.order.model.CreateOrderRequest;
 import com.paper.order.model.UpdateOrderRequest;
 import com.paper.order.service.OrderService;
@@ -24,9 +25,15 @@ public class OrderResource {
 	private OrderService orderService;
 
 	@CrossOrigin(value = "http://localhost:3000")
-	@PostMapping("/createorder")
+	@PostMapping("/createorderrequest")
 	public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
-		return this.orderService.createOrder(request);
+		return this.orderService.createOrderRequest(request);
+	}
+
+	@CrossOrigin(value = "http://localhost:3000")
+	@PostMapping("/orderapproval")
+	public ResponseEntity<?> approveOrder(@RequestBody ApproveOrderRequest request) {
+		return this.orderService.approveOrder(request);
 	}
 
 	@CrossOrigin(value = "http://localhost:3000")
@@ -42,6 +49,13 @@ public class OrderResource {
 	}
 
 	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getordersbycustomer")
+	public ResponseEntity<?> getOrderByCustomer(@RequestParam String customerId,
+			@RequestParam(required = false) String searchInput) {
+		return this.orderService.getOrderByCustomerId(customerId, searchInput);
+	}
+
+	@CrossOrigin(value = "http://localhost:3000")
 	@PutMapping("/updateorder")
 	public ResponseEntity<?> updateOrder(@RequestBody UpdateOrderRequest request) {
 		return this.orderService.updateOrder(request);
@@ -51,6 +65,18 @@ public class OrderResource {
 	@DeleteMapping("/deleteorder")
 	public ResponseEntity<?> deleteOrder(@RequestParam String orderId) {
 		return this.orderService.deleteOrder(orderId);
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@PostMapping("/addpayment")
+	public ResponseEntity<?> addPaymentDetails(@RequestBody ApproveOrderRequest request) {
+		return this.orderService.approveOrder(request);
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@PutMapping("/updatepayment")
+	public ResponseEntity<?> updatePaymentDetails(@RequestBody ApproveOrderRequest request) {
+		return this.orderService.approveOrder(request);
 	}
 
 }

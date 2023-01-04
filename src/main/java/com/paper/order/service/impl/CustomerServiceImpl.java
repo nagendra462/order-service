@@ -17,9 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.paper.order.constants.OrderConstants;
 import com.paper.order.model.Counter;
 import com.paper.order.model.CreateCustomerRequest;
 import com.paper.order.model.Customer;
+import com.paper.order.model.Status;
 import com.paper.order.model.UpdateCustomerRequest;
 import com.paper.order.service.CustomerService;
 import com.paper.order.service.EmailService;
@@ -43,7 +45,9 @@ public class CustomerServiceImpl implements CustomerService {
 		int custCount = counter.getCustomerCount() + 1;
 		Customer customer = new Customer();
 		BeanUtils.copyProperties(request, customer);
+		customer.setRole(OrderConstants.CUSTOMER);
 		customer.setCustomerId("C-" + custCount);
+		customer.setStatus(Status.PENDING.getStatus());
 		this.mongoTemplate.save(customer);
 		Update update = new Update();
 		update.set("customerCount", custCount);

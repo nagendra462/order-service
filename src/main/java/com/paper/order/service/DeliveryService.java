@@ -19,4 +19,6 @@ public interface DeliveryService {
 
 	ResponseEntity<?> deleteDelivery(String deliveryId);
 
+	ResponseEntity<?> getDeliveriesByCustomerId(String customerId);
+
 }
