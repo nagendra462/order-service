@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.paper.order.constants.OrderConstants;
 import com.paper.order.model.ApproveRequest;
 import com.paper.order.model.Customer;
 import com.paper.order.model.Delivery;
@@ -59,6 +60,7 @@ public class PaperServiceImpl implements PaperService {
 		}
 		Query query = new Query();
 		query.addCriteria(Criteria.where("email").is(username));
+		query.addCriteria(Criteria.where("status").is(OrderConstants.STATUS_APPROVED));
 		if (this.mongoTemplate.count(query, Customer.class) == 0) {
 			return new ResponseEntity<>("Email doesn't exist", HttpStatus.BAD_REQUEST);
 		}
