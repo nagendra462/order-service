@@ -20,4 +20,6 @@ public interface OrderService {
 
 	ResponseEntity<?> approveOrder(ApproveOrderRequest request);
 
+	ResponseEntity<?> getOrderByCustomerId(String customerId, String searchInput);
+
 }

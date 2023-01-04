@@ -1,8 +1,10 @@
 package com.paper.order.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +62,22 @@ public class OrderServiceImpl implements OrderService {
 		}
 		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 
+		List<Order> orders = this.mongoTemplate.find(query, Order.class);
+		if (!CollectionUtils.isEmpty(orders)) {
+			return new ResponseEntity<>(orders, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> getOrderByCustomerId(String customerId, String searchInput) {
+		Query query = new Query();
+		if (StringUtils.isNotEmpty(searchInput)) {
+			query = this.getSearchQuery(searchInput);
+		}
+		query.addCriteria(Criteria.where("customerId").is(customerId));
+		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 		List<Order> orders = this.mongoTemplate.find(query, Order.class);
 		if (!CollectionUtils.isEmpty(orders)) {
 			return new ResponseEntity<>(orders, HttpStatus.OK);

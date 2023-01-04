@@ -28,6 +28,9 @@ public class Order {
 	private String createdBy;
 	private String status;
 	private String acceptedBy;
+	private int totalAmount;
+	private int amountPaid;
+	private int paymentPending;
 
 	public String getId() {
 		return this.id;
@@ -139,6 +142,30 @@ public class Order {
 
 	public void setAcceptedBy(String acceptedBy) {
 		this.acceptedBy = acceptedBy;
+	}
+
+	public int getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(int totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public int getAmountPaid() {
+		return amountPaid;
+	}
+
+	public void setAmountPaid(int amountPaid) {
+		this.amountPaid = amountPaid;
+	}
+
+	public int getPaymentPending() {
+		return paymentPending;
+	}
+
+	public void setPaymentPending(int paymentPending) {
+		this.paymentPending = paymentPending;
 	}
 
 }

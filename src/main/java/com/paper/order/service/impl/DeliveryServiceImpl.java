@@ -120,4 +120,17 @@ public class DeliveryServiceImpl implements DeliveryService {
 		}
 	}
 
+	@Override
+	public ResponseEntity<?> getDeliveriesByCustomerId(String customerId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("customerId").in(customerId));
+		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+		List<Delivery> deliveries = this.mongoTemplate.find(query, Delivery.class);
+		if (!CollectionUtils.isEmpty(deliveries)) {
+			return new ResponseEntity<>(deliveries, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+		}
+	}
+
 }

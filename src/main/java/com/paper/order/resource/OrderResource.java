@@ -29,7 +29,7 @@ public class OrderResource {
 	public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
 		return this.orderService.createOrderRequest(request);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@PostMapping("/orderapproval")
 	public ResponseEntity<?> approveOrder(@RequestBody ApproveOrderRequest request) {
@@ -49,6 +49,13 @@ public class OrderResource {
 	}
 
 	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getordersbycustomer")
+	public ResponseEntity<?> getOrderByCustomer(@RequestParam String customerId,
+			@RequestParam(required = false) String searchInput) {
+		return this.orderService.getOrderByCustomerId(customerId, searchInput);
+	}
+
+	@CrossOrigin(value = "http://localhost:3000")
 	@PutMapping("/updateorder")
 	public ResponseEntity<?> updateOrder(@RequestBody UpdateOrderRequest request) {
 		return this.orderService.updateOrder(request);
@@ -58,6 +65,18 @@ public class OrderResource {
 	@DeleteMapping("/deleteorder")
 	public ResponseEntity<?> deleteOrder(@RequestParam String orderId) {
 		return this.orderService.deleteOrder(orderId);
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@PostMapping("/addpayment")
+	public ResponseEntity<?> addPaymentDetails(@RequestBody ApproveOrderRequest request) {
+		return this.orderService.approveOrder(request);
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@PutMapping("/updatepayment")
+	public ResponseEntity<?> updatePaymentDetails(@RequestBody ApproveOrderRequest request) {
+		return this.orderService.approveOrder(request);
 	}
 
 }
