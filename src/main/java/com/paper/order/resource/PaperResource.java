@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paper.order.model.ApproveRequest;
 import com.paper.order.model.LoginRequest;
 import com.paper.order.service.PaperService;
 
@@ -36,5 +36,17 @@ public class PaperResource {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 		return this.paperService.loginAuthentication(request.getUsername(), request.getPassword());
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getpendingaccounts")
+	public ResponseEntity<?> getPendingAccounts() {
+		return this.paperService.getPendingAccounts();
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@PostMapping("/accountapproval")
+	public ResponseEntity<?> accountApproval(@RequestBody ApproveRequest request) {
+		return this.paperService.accountApproval(request);
 	}
 }

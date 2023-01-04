@@ -7,13 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.paper.order.model.ApproveRequest;
 import com.paper.order.model.Customer;
 import com.paper.order.model.Delivery;
 import com.paper.order.model.Order;
+import com.paper.order.model.Status;
 import com.paper.order.model.UniqueValues;
 import com.paper.order.service.PaperService;
 
@@ -51,7 +54,7 @@ public class PaperServiceImpl implements PaperService {
 
 	@Override
 	public ResponseEntity<?> loginAuthentication(String username, String password) {
-		if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
 			return new ResponseEntity<>("Username or Password should not be blank", HttpStatus.BAD_REQUEST);
 		}
 		Query query = new Query();
@@ -66,6 +69,23 @@ public class PaperServiceImpl implements PaperService {
 		} else {
 			return new ResponseEntity<>("Invalid credentials", HttpStatus.FORBIDDEN);
 		}
+	}
+
+	@Override
+	public ResponseEntity<?> getPendingAccounts() {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("status").is(Status.PENDING.getStatus()));
+		return new ResponseEntity<>(this.mongoTemplate.find(query, Customer.class), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> accountApproval(ApproveRequest request) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("customerId").is(request.getCustomerId()));
+		Update update = new Update();
+		update.set("status", request.getStatus());
+		this.mongoTemplate.updateFirst(query, update, Customer.class);
+		return new ResponseEntity<>("Account" + request.getStatus().toLowerCase() + " successfully", HttpStatus.OK);
 	}
 
 }
