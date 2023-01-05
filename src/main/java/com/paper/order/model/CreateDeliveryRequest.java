@@ -6,6 +6,7 @@ public class CreateDeliveryRequest {
 	private String orderId;
 	private Date deliveryDate;
 	private String status;
+	private int price;
 
 	public String getOrderId() {
 		return orderId;
@@ -29,6 +30,14 @@ public class CreateDeliveryRequest {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 }

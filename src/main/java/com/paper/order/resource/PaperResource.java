@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.paper.order.model.ApproveRequest;
 import com.paper.order.model.LoginRequest;
+import com.paper.order.model.ReportFilter;
 import com.paper.order.service.PaperService;
 
 @RestController
@@ -48,5 +49,11 @@ public class PaperResource {
 	@PostMapping("/accountapproval")
 	public ResponseEntity<?> accountApproval(@RequestBody ApproveRequest request) {
 		return this.paperService.accountApproval(request);
+	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@PostMapping("/reports")
+	public ResponseEntity<?> generateReports(@RequestBody ReportFilter request) {
+		return this.paperService.generateReport(request);
 	}
 }

@@ -22,6 +22,7 @@ public class Delivery {
 	@LastModifiedDate
 	private String lastModifiedDate;
 	private String customerId;
+	private int price;
 
 	public String getId() {
 		return this.id;
@@ -85,6 +86,14 @@ public class Delivery {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 }

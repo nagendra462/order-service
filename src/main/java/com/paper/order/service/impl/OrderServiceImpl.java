@@ -28,14 +28,19 @@ import com.paper.order.model.OrderRequest;
 import com.paper.order.model.Status;
 import com.paper.order.model.UpdateOrderRequest;
 import com.paper.order.service.OrderService;
+import com.paper.order.service.SmsService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	
+	@Autowired
+	private SmsService smsService;
 
 	@Override
 	public ResponseEntity<?> createOrderRequest(CreateOrderRequest request) {
+		this.smsService.triggerSms();
 		OrderRequest order = new OrderRequest();
 		BeanUtils.copyProperties(request, order);
 		Query query = new Query();
@@ -59,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
 		Query query = new Query();
 		if (StringUtils.isNotEmpty(searchInput)) {
 			query = this.getSearchQuery(searchInput);
-		}
+		} 
 		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 
 		List<Order> orders = this.mongoTemplate.find(query, Order.class);

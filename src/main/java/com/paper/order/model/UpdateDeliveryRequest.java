@@ -7,6 +7,7 @@ public class UpdateDeliveryRequest {
 	private Date deliveryDate;
 	private String status;
 	private String deliveryId;
+	private int price;
 
 	public String getOrderId() {
 		return orderId;
@@ -38,6 +39,14 @@ public class UpdateDeliveryRequest {
 
 	public void setDeliveryId(String deliveryId) {
 		this.deliveryId = deliveryId;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 }

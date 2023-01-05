@@ -1,8 +1,11 @@
 package com.paper.order.service.impl;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,17 +14,17 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.paper.order.constants.OrderConstants;
 import com.paper.order.model.ApproveRequest;
 import com.paper.order.model.Customer;
 import com.paper.order.model.Delivery;
 import com.paper.order.model.Order;
+import com.paper.order.model.ReportFilter;
 import com.paper.order.model.Status;
 import com.paper.order.model.UniqueValues;
 import com.paper.order.service.PaperService;
-
-import io.micrometer.core.instrument.util.StringUtils;
 
 @Service
 public class PaperServiceImpl implements PaperService {
@@ -88,6 +91,38 @@ public class PaperServiceImpl implements PaperService {
 		update.set("status", request.getStatus());
 		this.mongoTemplate.updateFirst(query, update, Customer.class);
 		return new ResponseEntity<>("Account" + request.getStatus().toLowerCase() + " successfully", HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> generateReport(ReportFilter request) {
+		Query query = new Query();
+		if (!StringUtils.isEmpty(request.getCustomerId())) {
+			query.addCriteria(Criteria.where("customerId").in(request.getCustomerId()));
+		}
+
+		if (request.getRequestType().equals("orders")) {
+			query.addCriteria(Criteria.where("orderDate").gte(request.getStartDate()).lte(request.getEndDate()));
+			List<Order> orders = this.mongoTemplate.find(query, Order.class);
+			if (CollectionUtils.isEmpty(orders)) {
+				orders = new ArrayList<>();
+			}
+			return new ResponseEntity<>(orders, HttpStatus.OK);
+		} else if (request.getRequestType().equals("deliveries")) {
+			query.addCriteria(Criteria.where("deliveryDate").gte(request.getStartDate()).lte(request.getEndDate()));
+			List<Delivery> deliveries = this.mongoTemplate.find(query, Delivery.class);
+			if (CollectionUtils.isEmpty(deliveries)) {
+				deliveries = new ArrayList<>();
+			}
+			return new ResponseEntity<>(deliveries, HttpStatus.OK);
+		} else if (request.getRequestType().equals("customers")) {
+			query.addCriteria(Criteria.where("createdAt").gte(request.getStartDate()).lte(request.getEndDate()));
+			List<Customer> customers = this.mongoTemplate.find(query, Customer.class);
+			if (CollectionUtils.isEmpty(customers)) {
+				customers = new ArrayList<>();
+			}
+			return new ResponseEntity<>(customers, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("Invalid request type sent", HttpStatus.BAD_REQUEST);
 	}
 
 }

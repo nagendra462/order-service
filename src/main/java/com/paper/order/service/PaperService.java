@@ -3,6 +3,7 @@ package com.paper.order.service;
 import org.springframework.http.ResponseEntity;
 
 import com.paper.order.model.ApproveRequest;
+import com.paper.order.model.ReportFilter;
 
 public interface PaperService {
 
@@ -15,4 +16,6 @@ public interface PaperService {
 	ResponseEntity<?> getPendingAccounts();
 
 	ResponseEntity<?> accountApproval(ApproveRequest request);
+
+	ResponseEntity<?> generateReport(ReportFilter request);
 }
