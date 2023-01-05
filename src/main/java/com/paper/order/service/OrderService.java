@@ -12,6 +12,8 @@ public interface OrderService {
 
 	ResponseEntity<?> getOrders(String searchInput);
 
+	ResponseEntity<?> getRequestedOrders(String searchInput);
+
 	ResponseEntity<?> updateOrder(UpdateOrderRequest request);
 
 	ResponseEntity<?> deleteOrder(String orderId);

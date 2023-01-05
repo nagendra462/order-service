@@ -71,6 +71,22 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public ResponseEntity<?> getRequestedOrders(String searchInput) {
+		Query query = new Query();
+		if (StringUtils.isNotEmpty(searchInput)) {
+			query = this.getSearchQuery(searchInput);
+		}
+		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+
+		List<Order> orders = this.mongoTemplate.find(query, Order.class, "order_requests");
+		if (!CollectionUtils.isEmpty(orders)) {
+			return new ResponseEntity<>(orders, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+		}
+	}
+
+	@Override
 	public ResponseEntity<?> getOrderByCustomerId(String customerId, String searchInput) {
 		Query query = new Query();
 		if (StringUtils.isNotEmpty(searchInput)) {

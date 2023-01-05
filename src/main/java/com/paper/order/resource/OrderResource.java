@@ -41,6 +41,12 @@ public class OrderResource {
 	public ResponseEntity<?> getOrders(@RequestParam(required = false) String searchInput) {
 		return this.orderService.getOrders(searchInput);
 	}
+	
+	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getrequestedorders")
+	public ResponseEntity<?> getRequestedOrders(@RequestParam(required = false) String searchInput) {
+		return this.orderService.getRequestedOrders(searchInput);
+	}
 
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getorder")
