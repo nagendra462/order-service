@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.paper.order.constants.OrderConstants;
 import com.paper.order.model.ApproveOrderRequest;
 import com.paper.order.model.Counter;
 import com.paper.order.model.CreateOrderRequest;
@@ -40,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public ResponseEntity<?> createOrderRequest(CreateOrderRequest request) {
-		this.smsService.triggerSms();
+//		this.smsService.triggerSms();
 		OrderRequest order = new OrderRequest();
 		BeanUtils.copyProperties(request, order);
 		Query query = new Query();
@@ -81,9 +82,9 @@ public class OrderServiceImpl implements OrderService {
 		if (StringUtils.isNotEmpty(searchInput)) {
 			query = this.getSearchQuery(searchInput);
 		}
+		query.addCriteria(Criteria.where("status").ne(Status.ACCEPTED));
 		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
-
-		List<Order> orders = this.mongoTemplate.find(query, Order.class, "order_requests");
+		List<OrderRequest> orders = this.mongoTemplate.find(query, OrderRequest.class);
 		if (!CollectionUtils.isEmpty(orders)) {
 			return new ResponseEntity<>(orders, HttpStatus.OK);
 		} else {
@@ -204,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
 			int rollCount = counter.getRollCount() + 1;
 			order.setOrderId("WO-" + orderCount);
 			order.setRollId("R-" + rollCount);
-			order.setStatus(Status.PENDING.getStatus());
+			order.setStatus(Status.ACCEPTED.getStatus());
 			order.setAcceptedBy(request.getUserId());
 			this.mongoTemplate.save(order);
 			Update counterUpdate = new Update();
