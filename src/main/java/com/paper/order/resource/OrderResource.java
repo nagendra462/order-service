@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paper.order.model.AddPaymentRequest;
 import com.paper.order.model.ApproveOrderRequest;
 import com.paper.order.model.CreateOrderRequest;
 import com.paper.order.model.UpdateOrderRequest;
@@ -75,14 +76,14 @@ public class OrderResource {
 	
 	@CrossOrigin(value = "http://localhost:3000")
 	@PostMapping("/addpayment")
-	public ResponseEntity<?> addPaymentDetails(@RequestBody ApproveOrderRequest request) {
-		return this.orderService.approveOrder(request);
+	public ResponseEntity<?> addPaymentDetails(@RequestBody AddPaymentRequest request) {
+		return this.orderService.addPaymentDetails(request);
 	}
 	
 	@CrossOrigin(value = "http://localhost:3000")
-	@PutMapping("/updatepayment")
-	public ResponseEntity<?> updatePaymentDetails(@RequestBody ApproveOrderRequest request) {
-		return this.orderService.approveOrder(request);
+	@DeleteMapping("/deletepayment")
+	public ResponseEntity<?> deletePayment(@RequestParam String paymentId) {
+		return this.orderService.deletePayment(paymentId);
 	}
 
 }

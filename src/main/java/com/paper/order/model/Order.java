@@ -31,6 +31,7 @@ public class Order {
 	private int totalAmount;
 	private int amountPaid;
 	private int paymentPending;
+	private String orderRequestId;
 
 	public String getId() {
 		return this.id;
@@ -166,6 +167,14 @@ public class Order {
 
 	public void setPaymentPending(int paymentPending) {
 		this.paymentPending = paymentPending;
+	}
+
+	public String getOrderRequestId() {
+		return orderRequestId;
+	}
+
+	public void setOrderRequestId(String orderRequestId) {
+		this.orderRequestId = orderRequestId;
 	}
 
 }
