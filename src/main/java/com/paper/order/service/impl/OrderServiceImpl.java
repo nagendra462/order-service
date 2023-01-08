@@ -283,9 +283,9 @@ public class OrderServiceImpl implements OrderService {
 				this.mongoTemplate.save(order);
 			}
 			this.mongoTemplate.remove(payment);
-			return new ResponseEntity<>("Order " + paymentId + " is successfully deleted", HttpStatus.OK);
+			return new ResponseEntity<>("Payment " + paymentId + " is successfully deleted", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("No order found with Id-" + paymentId, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("No payment found with Id-" + paymentId, HttpStatus.NOT_FOUND);
 		}
 	}
 
