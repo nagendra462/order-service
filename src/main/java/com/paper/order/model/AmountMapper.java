@@ -13,7 +13,7 @@ public class AmountMapper {
 	@Id
 	@JsonIgnore
 	private String id;
-	private Map<String, String> values;
+	private Map<String, Double> values;
 
 	public String getId() {
 		return id;
@@ -23,11 +23,11 @@ public class AmountMapper {
 		this.id = id;
 	}
 
-	public Map<String, String> getValues() {
+	public Map<String, Double> getValues() {
 		return values;
 	}
 
-	public void setValues(Map<String, String> values) {
+	public void setValues(Map<String, Double> values) {
 		this.values = values;
 	}
 

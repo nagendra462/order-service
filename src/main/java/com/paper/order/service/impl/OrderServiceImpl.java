@@ -225,11 +225,11 @@ public class OrderServiceImpl implements OrderService {
 		Query query = new Query();
 		AmountMapper mapper = this.mongoTemplate.findOne(query, AmountMapper.class);
 		if (mapper != null) {
-			Map<String, String> valueMap = mapper.getValues();
+			Map<String, Double> valueMap = mapper.getValues();
 			if (valueMap.containsKey(cupSize)) {
-				for (Map.Entry<String, String> entry : valueMap.entrySet()) {
+				for (Map.Entry<String, Double> entry : valueMap.entrySet()) {
 					if (entry.getKey().equals(cupSize)) {
-						int cost = Integer.parseInt(entry.getValue());
+						int cost = entry.getValue().intValue();
 						return cost * Integer.parseInt(rollWeight);
 					}
 				}
