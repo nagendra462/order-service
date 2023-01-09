@@ -42,7 +42,7 @@ public class OrderResource {
 	public ResponseEntity<?> getOrders(@RequestParam(required = false) String searchInput) {
 		return this.orderService.getOrders(searchInput);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getrequestedorders")
 	public ResponseEntity<?> getRequestedOrders(@RequestParam(required = false) String searchInput) {
@@ -73,17 +73,29 @@ public class OrderResource {
 	public ResponseEntity<?> deleteOrder(@RequestParam String orderId) {
 		return this.orderService.deleteOrder(orderId);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@PostMapping("/addpayment")
 	public ResponseEntity<?> addPaymentDetails(@RequestBody AddPaymentRequest request) {
 		return this.orderService.addPaymentDetails(request);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@DeleteMapping("/deletepayment")
 	public ResponseEntity<?> deletePayment(@RequestParam String paymentId) {
 		return this.orderService.deletePayment(paymentId);
+	}
+
+	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getpayments")
+	public ResponseEntity<?> getPayments() {
+		return this.orderService.getPayments();
+	}
+
+	@CrossOrigin(value = "http://localhost:3000")
+	@GetMapping("/getpaymentsbyorder")
+	public ResponseEntity<?> getPaymentsByOrderId(@RequestParam String orderId) {
+		return this.orderService.getPaymentByOrderId(orderId);
 	}
 
 }

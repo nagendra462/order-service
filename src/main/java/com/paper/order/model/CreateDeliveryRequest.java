@@ -6,7 +6,7 @@ public class CreateDeliveryRequest {
 	private String orderId;
 	private Date deliveryDate;
 	private String status;
-	private int price;
+	private int rollWeight;
 
 	public String getOrderId() {
 		return orderId;
@@ -32,12 +32,12 @@ public class CreateDeliveryRequest {
 		this.status = status;
 	}
 
-	public int getPrice() {
-		return price;
+	public int getRollWeight() {
+		return rollWeight;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public void setRollWeight(int rollWeight) {
+		this.rollWeight = rollWeight;
 	}
 
 }

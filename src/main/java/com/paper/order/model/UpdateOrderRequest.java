@@ -5,9 +5,9 @@ import java.util.Date;
 public class UpdateOrderRequest {
 	private String orderId;
 	private String customerId;
-	private String rollWeight;
-	private String rollSize;
-	private String cupSize;
+	private Integer rollWeight;
+	private Integer rollSize;
+	private Integer cupSize;
 	private String paperSupplier;
 	private Date orderDate;
 
@@ -27,27 +27,27 @@ public class UpdateOrderRequest {
 		this.customerId = customerId;
 	}
 
-	public String getRollWeight() {
+	public Integer getRollWeight() {
 		return rollWeight;
 	}
 
-	public void setRollWeight(String rollWeight) {
+	public void setRollWeight(Integer rollWeight) {
 		this.rollWeight = rollWeight;
 	}
 
-	public String getRollSize() {
+	public Integer getRollSize() {
 		return rollSize;
 	}
 
-	public void setRollSize(String rollSize) {
+	public void setRollSize(Integer rollSize) {
 		this.rollSize = rollSize;
 	}
 
-	public String getCupSize() {
+	public Integer getCupSize() {
 		return cupSize;
 	}
 
-	public void setCupSize(String cupSize) {
+	public void setCupSize(Integer cupSize) {
 		this.cupSize = cupSize;
 	}
 

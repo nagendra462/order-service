@@ -29,4 +29,8 @@ public interface OrderService {
 
 	ResponseEntity<?> deletePayment(String paymentId);
 
+	ResponseEntity<?> getPayments();
+
+	ResponseEntity<?> getPaymentByOrderId(String orderId);
+
 }

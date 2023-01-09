@@ -15,9 +15,11 @@ public class Order {
 	private String id;
 	private Date orderDate;
 	private String customerId;
-	private String rollWeight;
-	private String rollSize;
-	private String cupSize;
+	private int rollWeight;
+	private int remainingRollWeight;
+	private int utilizedRollWeight;
+	private int rollSize;
+	private int cupSize;
 	private String paperSupplier;
 	private String orderId;
 	private String rollId;
@@ -55,30 +57,6 @@ public class Order {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
-	}
-
-	public String getRollWeight() {
-		return rollWeight;
-	}
-
-	public void setRollWeight(String rollWeight) {
-		this.rollWeight = rollWeight;
-	}
-
-	public String getRollSize() {
-		return rollSize;
-	}
-
-	public void setRollSize(String rollSize) {
-		this.rollSize = rollSize;
-	}
-
-	public String getCupSize() {
-		return cupSize;
-	}
-
-	public void setCupSize(String cupSize) {
-		this.cupSize = cupSize;
 	}
 
 	public String getPaperSupplier() {
@@ -175,6 +153,46 @@ public class Order {
 
 	public void setOrderRequestId(String orderRequestId) {
 		this.orderRequestId = orderRequestId;
+	}
+
+	public int getRollWeight() {
+		return rollWeight;
+	}
+
+	public void setRollWeight(int rollWeight) {
+		this.rollWeight = rollWeight;
+	}
+
+	public int getRemainingRollWeight() {
+		return remainingRollWeight;
+	}
+
+	public void setRemainingRollWeight(int remainingRollWeight) {
+		this.remainingRollWeight = remainingRollWeight;
+	}
+
+	public int getUtilizedRollWeight() {
+		return utilizedRollWeight;
+	}
+
+	public void setUtilizedRollWeight(int utilizedRollWeight) {
+		this.utilizedRollWeight = utilizedRollWeight;
+	}
+
+	public int getRollSize() {
+		return rollSize;
+	}
+
+	public void setRollSize(int rollSize) {
+		this.rollSize = rollSize;
+	}
+
+	public int getCupSize() {
+		return cupSize;
+	}
+
+	public void setCupSize(int cupSize) {
+		this.cupSize = cupSize;
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.paper.order.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.paper.order.constants.OrderConstants;
 import com.paper.order.model.AddPaymentRequest;
 import com.paper.order.model.AmountMapper;
 import com.paper.order.model.ApproveOrderRequest;
@@ -211,6 +209,7 @@ public class OrderServiceImpl implements OrderService {
 			order.setStatus(Status.ACCEPTED.getStatus());
 			order.setAcceptedBy(request.getUserId());
 			order.setTotalAmount(this.calculateOrderCost(orderRequest.getCupSize(), orderRequest.getRollWeight()));
+			order.setPaymentPending(order.getTotalAmount());
 			this.mongoTemplate.save(order);
 			Update counterUpdate = new Update();
 			update.set("orderCount", orderCount);
@@ -286,6 +285,32 @@ public class OrderServiceImpl implements OrderService {
 			return new ResponseEntity<>("Payment " + paymentId + " is successfully deleted", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("No payment found with Id-" + paymentId, HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> getPayments() {
+		Query query = new Query();
+		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+
+		List<PaymentDetails> payments = this.mongoTemplate.find(query, PaymentDetails.class);
+		if (!CollectionUtils.isEmpty(payments)) {
+			return new ResponseEntity<>(payments, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> getPaymentByOrderId(String orderId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("orderId").is(orderId));
+		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+		List<PaymentDetails> payments = this.mongoTemplate.find(query, PaymentDetails.class);
+		if (!CollectionUtils.isEmpty(payments)) {
+			return new ResponseEntity<>(payments, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 		}
 	}
 

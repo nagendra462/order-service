@@ -22,7 +22,8 @@ public class Delivery {
 	@LastModifiedDate
 	private String lastModifiedDate;
 	private String customerId;
-	private int price;
+	private int rollWeight;
+	
 
 	public String getId() {
 		return this.id;
@@ -88,12 +89,12 @@ public class Delivery {
 		this.customerId = customerId;
 	}
 
-	public int getPrice() {
-		return price;
+	public int getRollWeight() {
+		return rollWeight;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public void setRollWeight(int rollWeight) {
+		this.rollWeight = rollWeight;
 	}
 
 }

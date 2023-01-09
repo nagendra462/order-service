@@ -2,7 +2,7 @@ package com.paper.order.model;
 
 public enum Status {
 	PENDING("PENDING"), ACCEPTED("ACCEPTED"), PROCESSING("PROCESSING"), COMPLETED("COMPLETED"),
-	OUT_FOR_DELIVERY("OUT FOR DELIVERY");
+	OUT_FOR_DELIVERY("OUT FOR DELIVERY"), DELIVERED("DELIVERED");
 
 	private String status;
 

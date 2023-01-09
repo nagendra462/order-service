@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import com.paper.order.model.Counter;
 import com.paper.order.model.CreateDeliveryRequest;
 import com.paper.order.model.Delivery;
+import com.paper.order.model.Order;
 import com.paper.order.model.Status;
 import com.paper.order.model.UpdateDeliveryRequest;
 import com.paper.order.service.DeliveryService;
@@ -98,6 +99,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 			}
 			if (request.getStatus() != null) {
 				delivery.setStatus(request.getStatus());
+				if (request.getStatus().equals(Status.DELIVERED.getStatus())) {
+					Query orderQuery = new Query();
+					orderQuery.addCriteria(Criteria.where("orderId").is(delivery.getOrderId()));
+					Order order = this.mongoTemplate.findOne(orderQuery, Order.class);
+					int pendingRoll = order.getRemainingRollWeight();
+					pendingRoll += delivery.getRollWeight();
+					order.setRemainingRollWeight(pendingRoll);
+					order.setUtilizedRollWeight(order.getRollWeight() - pendingRoll);
+					this.mongoTemplate.save(order);
+				}
 			}
 			this.mongoTemplate.save(delivery);
 			return new ResponseEntity<>("Delivery " + delivery.getDeliveryId() + " is successfully updated",
@@ -113,6 +124,9 @@ public class DeliveryServiceImpl implements DeliveryService {
 		query.addCriteria(Criteria.where("deliveryId").is(deliveryId));
 		Delivery delivery = this.mongoTemplate.findOne(query, Delivery.class);
 		if (delivery != null) {
+			if (delivery.getStatus().equals(Status.DELIVERED.getStatus())) {
+				return new ResponseEntity<>("Cannot delete delivery which is already delivered", HttpStatus.OK);
+			}
 			this.mongoTemplate.remove(delivery);
 			return new ResponseEntity<>("Delivery " + deliveryId + " is successfully deleted", HttpStatus.OK);
 		} else {
