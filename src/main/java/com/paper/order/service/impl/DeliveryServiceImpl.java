@@ -41,6 +41,14 @@ public class DeliveryServiceImpl implements DeliveryService {
 		BeanUtils.copyProperties(request, delivery);
 		delivery.setDeliveryId("D-" + deliveryCount);
 		delivery.setStatus(Status.PENDING.getStatus());
+		Query orderQuery = new Query();
+		orderQuery.addCriteria(Criteria.where("orderId").is(delivery.getOrderId()));
+		Order order = this.mongoTemplate.findOne(orderQuery, Order.class);
+		int pendingRoll = order.getRemainingRollWeight();
+		pendingRoll -= delivery.getRollWeight();
+		order.setRemainingRollWeight(pendingRoll);
+		order.setUtilizedRollWeight(order.getRollWeight() - pendingRoll);
+		this.mongoTemplate.save(order);
 		this.mongoTemplate.save(delivery);
 		Update update = new Update();
 		update.set("deliveryCount", deliveryCount);
@@ -93,16 +101,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 		if (delivery != null) {
 			if (request.getStatus() != null) {
 				delivery.setStatus(request.getStatus());
-				if (request.getStatus().equals(Status.DELIVERED.getStatus())) {
-					Query orderQuery = new Query();
-					orderQuery.addCriteria(Criteria.where("orderId").is(delivery.getOrderId()));
-					Order order = this.mongoTemplate.findOne(orderQuery, Order.class);
-					int pendingRoll = order.getRemainingRollWeight();
-					pendingRoll -= delivery.getRollWeight();
-					order.setRemainingRollWeight(pendingRoll);
-					order.setUtilizedRollWeight(order.getRollWeight() - pendingRoll);
-					this.mongoTemplate.save(order);
-				}
 			}
 			this.mongoTemplate.save(delivery);
 			return new ResponseEntity<>("Delivery " + delivery.getDeliveryId() + " is successfully updated",
