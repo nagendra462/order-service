@@ -15,9 +15,9 @@ public class OrderRequest {
 	private String id;
 	private Date orderDate;
 	private String customerId;
-	private String rollWeight;
-	private String rollSize;
-	private String cupSize;
+	private int rollWeight;
+	private int rollSize;
+	private int cupSize;
 	private String paperSupplier;
 	private String orderRequestId;
 	@CreatedDate
@@ -51,27 +51,27 @@ public class OrderRequest {
 		this.customerId = customerId;
 	}
 
-	public String getRollWeight() {
+	public int getRollWeight() {
 		return rollWeight;
 	}
 
-	public void setRollWeight(String rollWeight) {
+	public void setRollWeight(int rollWeight) {
 		this.rollWeight = rollWeight;
 	}
 
-	public String getRollSize() {
+	public int getRollSize() {
 		return rollSize;
 	}
 
-	public void setRollSize(String rollSize) {
+	public void setRollSize(int rollSize) {
 		this.rollSize = rollSize;
 	}
 
-	public String getCupSize() {
+	public int getCupSize() {
 		return cupSize;
 	}
 
-	public void setCupSize(String cupSize) {
+	public void setCupSize(int cupSize) {
 		this.cupSize = cupSize;
 	}
 

@@ -220,16 +220,16 @@ public class OrderServiceImpl implements OrderService {
 		return new ResponseEntity<>("Unable to create order as order request is not accepted", HttpStatus.OK);
 	}
 
-	private int calculateOrderCost(String cupSize, String rollWeight) {
+	private int calculateOrderCost(int cupSize, int rollWeight) {
 		Query query = new Query();
 		AmountMapper mapper = this.mongoTemplate.findOne(query, AmountMapper.class);
 		if (mapper != null) {
 			Map<String, Double> valueMap = mapper.getValues();
-			if (valueMap.containsKey(cupSize)) {
+			if (valueMap.containsKey(String.valueOf(cupSize))) {
 				for (Map.Entry<String, Double> entry : valueMap.entrySet()) {
-					if (entry.getKey().equals(cupSize)) {
+					if (Integer.parseInt(entry.getKey()) == cupSize) {
 						int cost = entry.getValue().intValue();
-						return cost * Integer.parseInt(rollWeight);
+						return cost * rollWeight;
 					}
 				}
 			}
