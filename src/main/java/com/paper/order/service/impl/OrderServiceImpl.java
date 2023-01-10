@@ -210,11 +210,12 @@ public class OrderServiceImpl implements OrderService {
 			order.setAcceptedBy(request.getUserId());
 			order.setTotalAmount(this.calculateOrderCost(orderRequest.getCupSize(), orderRequest.getRollWeight()));
 			order.setPaymentPending(order.getTotalAmount());
+			order.setRemainingRollWeight(order.getRollWeight());
 			this.mongoTemplate.save(order);
 			Update counterUpdate = new Update();
-			update.set("orderCount", orderCount);
-			update.set("rollCount", rollCount);
-			this.mongoTemplate.updateFirst(query, counterUpdate, Counter.class);
+			counterUpdate.set("orderCount", orderCount);
+			counterUpdate.set("rollCount", rollCount);
+			this.mongoTemplate.updateFirst(orderQuery, counterUpdate, Counter.class);
 			return new ResponseEntity<>("Order successfully created with Id- " + order.getOrderId(), HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Unable to create order as order request is not accepted", HttpStatus.OK);

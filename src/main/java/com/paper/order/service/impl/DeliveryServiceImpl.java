@@ -91,12 +91,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 		query.addCriteria(Criteria.where("deliveryId").is(request.getDeliveryId()));
 		Delivery delivery = this.mongoTemplate.findOne(query, Delivery.class);
 		if (delivery != null) {
-			if (!request.getOrderId().isEmpty()) {
-				delivery.setOrderId(request.getOrderId());
-			}
-			if (request.getDeliveryDate() != null) {
-				delivery.setDeliveryDate(request.getDeliveryDate());
-			}
 			if (request.getStatus() != null) {
 				delivery.setStatus(request.getStatus());
 				if (request.getStatus().equals(Status.DELIVERED.getStatus())) {
@@ -104,7 +98,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 					orderQuery.addCriteria(Criteria.where("orderId").is(delivery.getOrderId()));
 					Order order = this.mongoTemplate.findOne(orderQuery, Order.class);
 					int pendingRoll = order.getRemainingRollWeight();
-					pendingRoll += delivery.getRollWeight();
+					pendingRoll -= delivery.getRollWeight();
 					order.setRemainingRollWeight(pendingRoll);
 					order.setUtilizedRollWeight(order.getRollWeight() - pendingRoll);
 					this.mongoTemplate.save(order);
