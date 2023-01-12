@@ -6,6 +6,7 @@ public class AddPaymentRequest {
 	private String orderId;
 	private int amount;
 	private Date paymentDate;
+	private String mode;
 	private String notes;
 
 	public String getOrderId() {
@@ -32,6 +33,14 @@ public class AddPaymentRequest {
 		this.paymentDate = paymentDate;
 	}
 
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+	
 	public String getNotes() {
 		return notes;
 	}
