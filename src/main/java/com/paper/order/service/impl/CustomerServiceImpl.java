@@ -118,7 +118,8 @@ public class CustomerServiceImpl implements CustomerService {
 		query.addCriteria(Criteria.where("customerId").is(customerId));
 		Customer customer = this.mongoTemplate.findOne(query, Customer.class);
 		if (customer != null) {
-			this.mongoTemplate.remove(customer);
+			customer.setStatus("INACTIVE");	
+			this.mongoTemplate.save(customer);
 			return new ResponseEntity<>("Customer " + customerId + " is successfully deleted", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("No Customer found with Id-" + customerId, HttpStatus.NOT_FOUND);

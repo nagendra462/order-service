@@ -63,7 +63,7 @@ public class PaperServiceImpl implements PaperService {
 		}
 		Query query = new Query();
 		query.addCriteria(Criteria.where("email").is(username));
-		query.addCriteria(Criteria.where("status").is(OrderConstants.STATUS_APPROVED));
+		query.addCriteria(Criteria.where("status").is(OrderConstants.STATUS_APPROVED).ne("INACTIVE"));
 		if (this.mongoTemplate.count(query, Customer.class) == 0) {
 			return new ResponseEntity<>("Email doesn't exist", HttpStatus.BAD_REQUEST);
 		}
