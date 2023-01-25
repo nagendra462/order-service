@@ -19,7 +19,7 @@ import com.paper.order.model.UpdateOrderRequest;
 import com.paper.order.service.OrderService;
 
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/api/v1/paper/orders")
 public class OrderResource {
 
 	@Autowired

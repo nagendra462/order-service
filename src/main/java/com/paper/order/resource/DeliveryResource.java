@@ -17,7 +17,7 @@ import com.paper.order.model.UpdateDeliveryRequest;
 import com.paper.order.service.DeliveryService;
 
 @RestController
-@RequestMapping("/api/v1/delivery")
+@RequestMapping("/api/v1/paper/delivery")
 public class DeliveryResource {
 
 	@Autowired

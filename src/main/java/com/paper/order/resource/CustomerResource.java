@@ -17,7 +17,7 @@ import com.paper.order.model.UpdateCustomerRequest;
 import com.paper.order.service.CustomerService;
 
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping("/api/v1/paper/customers")
 public class CustomerResource {
 
 	@Autowired
