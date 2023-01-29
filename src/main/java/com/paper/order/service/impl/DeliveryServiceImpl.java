@@ -1,8 +1,11 @@
 package com.paper.order.service.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -58,8 +61,11 @@ public class DeliveryServiceImpl implements DeliveryService {
 	}
 
 	@Override
-	public ResponseEntity<?> getDeliveries() {
+	public ResponseEntity<?> getDeliveries(String searchInput) {
 		Query query = new Query();
+		if (StringUtils.isNotEmpty(searchInput)) {
+			query = this.getSearchQuery(searchInput);
+		}
 		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 		List<Delivery> deliveries = this.mongoTemplate.find(query, Delivery.class);
 		if (!CollectionUtils.isEmpty(deliveries)) {
@@ -127,8 +133,11 @@ public class DeliveryServiceImpl implements DeliveryService {
 	}
 
 	@Override
-	public ResponseEntity<?> getDeliveriesByCustomerId(String customerId) {
+	public ResponseEntity<?> getDeliveriesByCustomerId(String customerId, String searchInput) {
 		Query query = new Query();
+		if (StringUtils.isNotEmpty(searchInput)) {
+			query = this.getSearchQuery(searchInput);
+		}
 		query.addCriteria(Criteria.where("customerId").in(customerId));
 		query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
 		List<Delivery> deliveries = this.mongoTemplate.find(query, Delivery.class);
@@ -137,6 +146,28 @@ public class DeliveryServiceImpl implements DeliveryService {
 		} else {
 			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 		}
+	}
+
+	private Query getSearchQuery(String searchInput) {
+		Query query = new Query();
+		List<Criteria> criterias = new LinkedList<>();
+		Criteria searchCriteria = new Criteria();
+		searchCriteria.orOperator(
+				Criteria.where("orderId")
+						.regex(Pattern.compile(searchInput, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)),
+				Criteria.where("deliveryId")
+						.regex(Pattern.compile(searchInput, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)),
+				Criteria.where("status")
+						.regex(Pattern.compile(searchInput, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)),
+				Criteria.where("customerId")
+						.regex(Pattern.compile(searchInput, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)));
+		criterias.add(searchCriteria);
+		if (!CollectionUtils.isEmpty(criterias)) {
+			Criteria criteria = new Criteria();
+			criteria.andOperator(criterias.stream().toArray(Criteria[]::new));
+			query.addCriteria(criteria);
+		}
+		return query;
 	}
 
 }

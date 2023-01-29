@@ -31,14 +31,15 @@ public class DeliveryResource {
 
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getdeliveries")
-	public ResponseEntity<?> getDeliveries() {
-		return this.deliveryService.getDeliveries();
+	public ResponseEntity<?> getDeliveries(@RequestParam(required = false) String searchInput) {
+		return this.deliveryService.getDeliveries(searchInput);
 	}
-	
+
 	@CrossOrigin(value = "http://localhost:3000")
 	@GetMapping("/getdeliveriesbycustomer")
-	public ResponseEntity<?> getDeliveriesByCustomerId(@RequestParam String customerId) {
-		return this.deliveryService.getDeliveriesByCustomerId(customerId);
+	public ResponseEntity<?> getDeliveriesByCustomerId(@RequestParam String customerId,
+			@RequestParam(required = false) String searchInput) {
+		return this.deliveryService.getDeliveriesByCustomerId(customerId, searchInput);
 	}
 
 	@CrossOrigin(value = "http://localhost:3000")

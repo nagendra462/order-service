@@ -9,7 +9,7 @@ public interface DeliveryService {
 
 	ResponseEntity<?> createDelivery(CreateDeliveryRequest request);
 
-	ResponseEntity<?> getDeliveries();
+	ResponseEntity<?> getDeliveries(String searchInput);
 
 	ResponseEntity<?> getDelivery(String deliveryId);
 
@@ -19,6 +19,6 @@ public interface DeliveryService {
 
 	ResponseEntity<?> deleteDelivery(String deliveryId);
 
-	ResponseEntity<?> getDeliveriesByCustomerId(String customerId);
+	ResponseEntity<?> getDeliveriesByCustomerId(String customerId, String searchInput);
 
 }

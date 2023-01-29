@@ -4,6 +4,7 @@ public class ApproveOrderRequest {
 	private String orderRequestId;
 	private String status;
 	private String userId;
+	private String reason;
 
 	public String getOrderRequestId() {
 		return orderRequestId;
@@ -27,6 +28,14 @@ public class ApproveOrderRequest {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

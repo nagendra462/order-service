@@ -192,6 +192,9 @@ public class OrderServiceImpl implements OrderService {
 		query.addCriteria(Criteria.where("orderRequestId").is(request.getOrderRequestId()));
 		Update update = new Update();
 		update.set("status", request.getStatus());
+		if (StringUtils.isNotEmpty(request.getReason())) {
+			update.set("reason", request.getReason());
+		}
 		this.mongoTemplate.updateFirst(query, update, OrderRequest.class);
 		if (request.getStatus().equals(Status.ACCEPTED.getStatus())) {
 			OrderRequest orderRequest = this.mongoTemplate.findOne(query, OrderRequest.class);

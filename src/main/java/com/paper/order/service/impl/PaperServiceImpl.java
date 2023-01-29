@@ -89,6 +89,9 @@ public class PaperServiceImpl implements PaperService {
 		query.addCriteria(Criteria.where("customerId").is(request.getCustomerId()));
 		Update update = new Update();
 		update.set("status", request.getStatus());
+		if (StringUtils.isNotEmpty(request.getReason())) {
+			update.set("reason", request.getReason());
+		}
 		this.mongoTemplate.updateFirst(query, update, Customer.class);
 		return new ResponseEntity<>("Account" + request.getStatus().toLowerCase() + " successfully", HttpStatus.OK);
 	}

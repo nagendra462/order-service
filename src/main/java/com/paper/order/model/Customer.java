@@ -33,6 +33,7 @@ public class Customer {
 	private String password;
 	private String status;
 	private String role;
+	private String reason;
 
 	public String getId() {
 		return this.id;
@@ -128,6 +129,14 @@ public class Customer {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }
